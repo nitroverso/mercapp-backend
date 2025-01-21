@@ -10,7 +10,7 @@ npm install express typescript @supabase/supabase-js
 
 To start the project, follow these steps:
 
-- 1. Transpile TypeScript Code:
+- Transpile TypeScript Code:
 
 Run the following script to transpile the TypeScript code into JavaScript:
 
@@ -18,8 +18,8 @@ Run the following script to transpile the TypeScript code into JavaScript:
 npm run tsc
 ```
 
-- 2. Start the Server:
-     After transpiling the code, run the server with:
+- Start the Server:
+  After transpiling the code, run the server with:
 
 ```bash
 npm start
