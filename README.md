@@ -15,6 +15,7 @@ To start the project, follow these steps:
 ```bash
 npm install
 ```
+
 - Install the following dependencies:
 
 ```bash
@@ -26,11 +27,11 @@ npm install cors dotenv jsonwebtoken @types/express @types/jsonwebtoken
 Run the following script to transpile the TypeScript code into JavaScript:
 
 ```bash
-npm run tsc
+npm run build
 ```
 
 - Start the server:
-After transpiling the code, run the server with:
+  After transpiling the code, run the server with:
 
 ```bash
 npm start
