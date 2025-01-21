@@ -73,6 +73,8 @@ mercapp-back/
 │ └── index.ts
 ├── dist/
 ├── node_modules/
+├── .env
+├── .gitignore
 ├── package.json
 ├── tsconfig.json
 └── README.md
