@@ -9,9 +9,9 @@ interface AuthenticatedRequest extends Request {
   user?: {
     id: string;
     email: string;
-    name: string;
-    age: number;
-    gender: string;
+    firstName: string;
+    lastName: string;
+    birthday: string;
   };
 }
 
@@ -29,7 +29,7 @@ export const authenticateUser = async (req: AuthenticatedRequest, res: Response,
 
     const { data: user, error } = await supabase
       .from("users")
-      .select("id, name, age, gender")
+      .select("id, firstName, birthday, lastName")
       .eq("id", user_id)
       .single();
 
@@ -41,9 +41,9 @@ export const authenticateUser = async (req: AuthenticatedRequest, res: Response,
     req.user = {
       id: user.id,
       email: verified.email as string,
-      name: user.name,
-      age: user.age,
-      gender: user.gender,
+      firstName: user.firstName,
+      lastName: user.lastName,
+      birthday: user.birthday,
     };
 
     next();

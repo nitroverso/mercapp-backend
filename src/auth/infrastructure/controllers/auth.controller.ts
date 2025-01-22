@@ -1,22 +1,23 @@
 import { Request, Response } from "express";
-import { register, login, logout } from "../../application/services/authService";
+import { register, login, logout, deleteUser } from "../../application/services/authService";
 
 export const registerUser = async (req: Request, res: Response): Promise<void> => {
   try {
-    const { email, password, name, age, gender } = req.body;
+    const { email, password, firstName, lastName, birthday } = req.body;
 
-    if (!email || !password || !name || !age || !gender) {
+    if (!email || !password || !firstName || !lastName || !birthday) {
+      console.log(lastName);  
       res.status(400).json({ error: "Todos los campos son requeridos" });
-      return;
+      return ;
     }
 
-    const result = await register(email, password, name, age, gender);
+    const result = await register(email, password, firstName, lastName, birthday);
     res.json(result);
   } catch (error) {
     if (error instanceof Error) {
       res.status(400).json({ error: error.message });
     } else {
-      res.status(400).json({ error: "An unknown error occurred" });
+      res.status(400).json({ error: "A ocurrido un error" });
     }
   }
 };
@@ -30,12 +31,12 @@ export const loginUser = async (req: Request, res: Response): Promise<void> => {
     if (error instanceof Error) {
       res.status(400).json({ error: error.message });
     } else {
-      res.status(400).json({ error: "An unknown error occurred" });
+      res.status(400).json({ error: "A ocurrido un error" });
     }
   }
 };
 
-export const logoutUser = async (req: Request, res: Response): Promise<void> => {
+export const logoutUser = async ( res: Response): Promise<void> => {
   try {
     const result = await logout();
     res.json(result);
@@ -43,7 +44,21 @@ export const logoutUser = async (req: Request, res: Response): Promise<void> => 
     if (error instanceof Error) {
       res.status(500).json({ error: error.message });
     } else {
-      res.status(500).json({ error: "An unknown error occurred" });
+      res.status(500).json({ error: "A ocurrido un error" });
+    }
+  }
+};
+
+export const deleteUserController = async (req: Request, res: Response): Promise<void> => {
+  try {
+    const { userId } = req.params;
+    const result = await deleteUser(userId);
+    res.json(result);
+  } catch (error) {
+    if (error instanceof Error) {
+      res.status(400).json({ error: error.message });
+    } else {
+      res.status(400).json({ error: "A ocurrido un error" });
     }
   }
 };
