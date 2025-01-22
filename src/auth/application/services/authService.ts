@@ -1,22 +1,18 @@
 import supabase from "../../../config/supabase";
 
-
-export const register = async (email: string, password: string, name: string, age: number, gender: string) => {
- 
+export const register = async ( email:string, password: string, firstName: string, lastName: string, birthday: string) => {
   const { data, error } = await supabase.auth.signUp({ email, password });
 
   if (error) throw new Error(error.message);
 
   const user_id = data.user?.id;
+  const user = { id: user_id, firstName, lastName, birthday };
 
-  if (!user_id) throw new Error("No se pudo obtener el ID del usuario");
-
-  const user = { id: user_id, name, age, gender };
   const { error: insertError } = await supabase.from("users").insert([user]);
 
   if (insertError) throw new Error(insertError.message);
 
-  return { message: "Usuario registrado con éxito" };
+  return { message: "Usuario registrado con éxito", data: user, user: data.user };
 };
 
 export const login = async (email: string, password: string) => {
@@ -36,4 +32,12 @@ export const logout = async () => {
   if (error) throw new Error(error.message);
 
   return { message: "Sesión cerrada exitosamente" };
+};
+
+export const deleteUser = async (userId: string) => {
+  const { error } = await supabase.auth.admin.deleteUser(userId);
+
+  if (error) throw new Error(error.message);
+
+  return { message: "Usuario eliminado exitosamente" };
 };
