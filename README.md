@@ -19,7 +19,7 @@ npm install
 - Install the following dependencies:
 
 ```bash
-npm install cors dotenv jsonwebtoken @types/express @types/jsonwebtoken
+npm install cors dotenv jsonwebtoken @types/express @types/jsonwebtoken express typescript @supabase/supabase-js
 ```
 
 - Transpile TypeScript code:
