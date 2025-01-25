@@ -49,7 +49,10 @@ export const loginUser = async (req: Request, res: Response): Promise<void> => {
   }
 };
 
-export const logoutUser = async (res: Response): Promise<void> => {
+export const logoutUser = async (
+  req: Request,
+  res: Response
+): Promise<void> => {
   try {
     const result = await logout();
     res.json(result);
