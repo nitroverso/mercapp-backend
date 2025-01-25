@@ -50,4 +50,4 @@ jobs:
           context: . # Contexto actual (la raíz del repositorio)
           file: ./Dockerfile # Ruta al Dockerfile
           push: true # Publicar la imagen
-          tags: ${{ vars.DOCKERHUB_USERNAME }}/mercapp-api:1.0.0
+          tags: ${{ vars.DOCKERHUB_USERNAME }}/mercapp-api:latest # Nombre de la imagen
