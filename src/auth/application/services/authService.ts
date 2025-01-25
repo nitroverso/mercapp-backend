@@ -23,7 +23,7 @@ export const login = async (email: string, password: string) => {
 
   if (error) throw new Error(error.message);
 
-  return { message: "Inicio de sesión exitoso", user: data.user, data: data.session.access_token };
+  return { message: "Inicio de sesión exitoso", user: data.user, jwt: data.session.access_token };
 };
 
 export const logout = async () => {

@@ -1,17 +1,30 @@
 import { Request, Response } from "express";
-import { register, login, logout, deleteUser } from "../../application/services/authService";
+import {
+  register,
+  login,
+  logout,
+  deleteUser,
+} from "../../application/services/authService";
 
-export const registerUser = async (req: Request, res: Response): Promise<void> => {
+export const registerUser = async (
+  req: Request,
+  res: Response
+): Promise<void> => {
   try {
     const { email, password, firstName, lastName, birthday } = req.body;
 
     if (!email || !password || !firstName || !lastName || !birthday) {
-      console.log(lastName);  
       res.status(400).json({ error: "Todos los campos son requeridos" });
-      return ;
+      return;
     }
 
-    const result = await register(email, password, firstName, lastName, birthday);
+    const result = await register(
+      email,
+      password,
+      firstName,
+      lastName,
+      birthday
+    );
     res.json(result);
   } catch (error) {
     if (error instanceof Error) {
@@ -36,7 +49,10 @@ export const loginUser = async (req: Request, res: Response): Promise<void> => {
   }
 };
 
-export const logoutUser = async ( res: Response): Promise<void> => {
+export const logoutUser = async (
+  req: Request,
+  res: Response
+): Promise<void> => {
   try {
     const result = await logout();
     res.json(result);
@@ -49,7 +65,10 @@ export const logoutUser = async ( res: Response): Promise<void> => {
   }
 };
 
-export const deleteUserController = async (req: Request, res: Response): Promise<void> => {
+export const deleteUserController = async (
+  req: Request,
+  res: Response
+): Promise<void> => {
   try {
     const { userId } = req.params;
     const result = await deleteUser(userId);
