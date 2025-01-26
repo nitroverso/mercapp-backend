@@ -1,6 +1,12 @@
 import supabase from "../../../config/supabase";
 
-export const register = async ( email:string, password: string, firstName: string, lastName: string, birthday: string) => {
+export const register = async (
+  email: string,
+  password: string,
+  firstName: string,
+  lastName: string,
+  birthday: string
+) => {
   const { data, error } = await supabase.auth.signUp({ email, password });
 
   if (error) throw new Error(error.message);
@@ -12,7 +18,11 @@ export const register = async ( email:string, password: string, firstName: strin
 
   if (insertError) throw new Error(insertError.message);
 
-  return { message: "Usuario registrado con éxito", data: user, user: data.user };
+  return {
+    message: "Usuario registrado con éxito",
+    data: user,
+    user: data.user,
+  };
 };
 
 export const login = async (email: string, password: string) => {
@@ -23,7 +33,21 @@ export const login = async (email: string, password: string) => {
 
   if (error) throw new Error(error.message);
 
-  return { message: "Inicio de sesión exitoso", user: data.user, jwt: data.session.access_token };
+  const user_id = data.user?.id;
+  const { data: UserData, error: UserError } = await supabase
+    .from("users")
+    .select("*")
+    .eq("id", user_id)
+    .single();
+
+  if (UserError) throw new Error(UserError.message);
+  console.log(UserData);
+  return {
+    message: "Inicio de sesión exitoso",
+    user: UserData,
+    session: data.user,
+    jwt: data.session.access_token,
+  };
 };
 
 export const logout = async () => {
