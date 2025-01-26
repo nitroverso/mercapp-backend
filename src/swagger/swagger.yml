@@ -32,15 +32,15 @@ paths:
               type: object
               properties:
                 email:
-                  type: string
+                  type: "example@gmail.com"
                 password:
-                  type: string
+                  type: "password"
                 firstName:
-                  type: string
+                  type: "example"
                 lastName:
-                  type: string
+                  type: "LasExample"
                 birthday:
-                  type: string
+                  type: "26/02/1996"
       responses:
         "200":
           description: Usuario registrado exitosamente
