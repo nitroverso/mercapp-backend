@@ -8,9 +8,7 @@ RUN npm install
 
 RUN npm run build
 
-ENV PORT=5000
-
-EXPOSE 8000
+EXPOSE 5000
 
 CMD [ "npm", "start"]
 
