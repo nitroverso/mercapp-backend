@@ -1,5 +1,11 @@
 import { Request, Response } from "express";
-import { listCategory, getCategoryById, createCategory, updateCategory, deleteCategory } from "../../application/services/categoryService";
+import {
+  listCategory,
+  getCategoryById,
+  createCategory,
+  updateCategory,
+  deleteCategory,
+} from "../../application/services/categoryService";
 
 interface AuthenticatedRequest extends Request {
   user?: {
@@ -7,9 +13,12 @@ interface AuthenticatedRequest extends Request {
   };
 }
 
-export const getCategories = async (req: AuthenticatedRequest, res: Response) => {
+export const getCategories = async (
+  req: AuthenticatedRequest,
+  res: Response
+) => {
   try {
-    const userId = req.user!.id; 
+    const userId = req.user!.id;
     const category = await listCategory(userId);
     res.json(category);
   } catch (error) {
@@ -24,7 +33,7 @@ export const getCategories = async (req: AuthenticatedRequest, res: Response) =>
 export const getCategory = async (req: AuthenticatedRequest, res: Response) => {
   try {
     const { id } = req.params;
-    const userId = req.user!.id; 
+    const userId = req.user!.id;
     const category = await getCategoryById(id, userId);
     if (category) {
       res.json(category);
@@ -46,9 +55,14 @@ export const addCategory = async (req: AuthenticatedRequest, res: Response) => {
 
     const userId = req.user!.id;
 
-    await createCategory(userId, name);
-
-    res.status(201).json({ message: "Categoria creada satisfactoriamente" });
+    const nuevaCategory = await createCategory(userId, name);
+    if (nuevaCategory)
+      res
+        .status(201)
+        .json({
+          nuevaCategory,
+          message: "Categoria creada satisfactoriamente",
+        });
   } catch (error) {
     if (error instanceof Error) {
       res.status(500).json({ error: error.message });
@@ -58,11 +72,13 @@ export const addCategory = async (req: AuthenticatedRequest, res: Response) => {
   }
 };
 
-
-export const updateCategoryController = async (req: AuthenticatedRequest, res: Response) => {
+export const updateCategoryController = async (
+  req: AuthenticatedRequest,
+  res: Response
+) => {
   try {
     const { id } = req.params;
-    const userId = req.user!.id; 
+    const userId = req.user!.id;
     const categoryData = req.body;
     await updateCategory(id, userId, categoryData);
     res.json({ message: "Cateogria actualizada satisfactoriamente" });
@@ -75,10 +91,13 @@ export const updateCategoryController = async (req: AuthenticatedRequest, res: R
   }
 };
 
-export const deleteCategoryController = async (req: AuthenticatedRequest, res: Response) => {
+export const deleteCategoryController = async (
+  req: AuthenticatedRequest,
+  res: Response
+) => {
   try {
     const { id } = req.params;
-    const userId = req.user!.id; 
+    const userId = req.user!.id;
     await deleteCategory(id, userId);
     res.status(204).send();
     res.json({ message: "Categoria eliminada satisfactoriamente" });

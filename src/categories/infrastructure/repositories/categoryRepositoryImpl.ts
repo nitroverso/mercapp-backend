@@ -26,10 +26,11 @@ export class categoryRepositoryImpl implements ICategoryRepository {
     return data as Category;
   }
 
-  async save(category: Category): Promise<void> {
+  async save(category: Category): Promise<Category[]> {
     const { error } = await supabase.from(TABLES.CATEGORIES).insert([category]);
 
     if (error) throw new Error(error.message);
+    return [category];
   }
 
   async update(
