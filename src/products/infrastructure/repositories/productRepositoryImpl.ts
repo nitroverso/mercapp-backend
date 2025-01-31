@@ -1,13 +1,14 @@
 import { IProductRepository } from "../../domain/interfaces/IProductRepository";
 import { Product } from "../../domain/entities/product";
 import supabase from "../../../config/supabase";
+import { COLUMNS, TABLES } from "../../../constants/mpConstanst";
 
 export class ProductRepositoryImpl implements IProductRepository {
   async findAll(userId: string): Promise<Product[]> {
     const { data, error } = await supabase
-      .from("products")
+      .from(TABLES.PRODUCTS)
       .select("*")
-      .eq("user_id", userId);
+      .eq(COLUMNS.USER_ID, userId);
 
     if (error) throw new Error(error.message);
     return data as Product[];
@@ -15,10 +16,10 @@ export class ProductRepositoryImpl implements IProductRepository {
 
   async findById(id: string, userId: string): Promise<Product | null> {
     const { data, error } = await supabase
-      .from("products")
+      .from(TABLES.PRODUCTS)
       .select("*")
-      .eq("id", id)
-      .eq("user_id", userId)
+      .eq(COLUMNS.ID, id)
+      .eq(COLUMNS.USER_ID, userId)
       .single();
 
     if (error) return null;
@@ -26,29 +27,31 @@ export class ProductRepositoryImpl implements IProductRepository {
   }
 
   async save(product: Product): Promise<void> {
-    const { error } = await supabase
-      .from("products")
-      .insert([product]);
+    const { error } = await supabase.from(TABLES.PRODUCTS).insert([product]);
 
     if (error) throw new Error(error.message);
   }
 
-  async update(id: string, userId: string, product: Partial<Product>): Promise<void> {
+  async update(
+    id: string,
+    userId: string,
+    product: Partial<Product>
+  ): Promise<void> {
     const { error } = await supabase
-      .from("products")
+      .from(TABLES.PRODUCTS)
       .update(product)
-      .eq("id", id)
-      .eq("user_id", userId);
+      .eq(COLUMNS.ID, id)
+      .eq(COLUMNS.USER_ID, userId);
 
     if (error) throw new Error(error.message);
   }
 
   async delete(id: string, userId: string): Promise<void> {
     const { error } = await supabase
-      .from("products")
+      .from(TABLES.PRODUCTS)
       .delete()
-      .eq("id", id)
-      .eq("user_id", userId);
+      .eq(COLUMNS.ID, id)
+      .eq(COLUMNS.USER_ID, userId);
 
     if (error) throw new Error(error.message);
   }

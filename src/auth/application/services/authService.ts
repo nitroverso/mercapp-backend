@@ -1,4 +1,5 @@
 import supabase from "../../../config/supabase";
+import { COLUMNS, TABLES } from "../../../constants/mpConstanst";
 
 export const register = async (
   email: string,
@@ -14,7 +15,9 @@ export const register = async (
   const user_id = data.user?.id;
   const user = { id: user_id, firstName, lastName, birthday };
 
-  const { error: insertError } = await supabase.from("users").insert([user]);
+  const { error: insertError } = await supabase
+    .from(TABLES.USERS)
+    .insert([user]);
 
   if (insertError) throw new Error(insertError.message);
 
@@ -35,9 +38,9 @@ export const login = async (email: string, password: string) => {
 
   const user_id = data.user?.id;
   const { data: UserData, error: UserError } = await supabase
-    .from("users")
+    .from(TABLES.USERS)
     .select("*")
-    .eq("id", user_id)
+    .eq(COLUMNS.ID, user_id)
     .single();
 
   if (UserError) throw new Error(UserError.message);

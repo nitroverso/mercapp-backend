@@ -2,6 +2,7 @@ import { Request, Response, NextFunction } from "express";
 import jwt from "jsonwebtoken";
 import supabase from "../../../config/supabase";
 import dotenv from "dotenv";
+import { COLUMNS, TABLES } from "../../../constants/mpConstanst";
 
 dotenv.config();
 
@@ -15,7 +16,11 @@ interface AuthenticatedRequest extends Request {
   };
 }
 
-export const authenticateUser = async (req: AuthenticatedRequest, res: Response, next: NextFunction): Promise<void> => {
+export const authenticateUser = async (
+  req: AuthenticatedRequest,
+  res: Response,
+  next: NextFunction
+): Promise<void> => {
   const token = req.header("Authorization")?.split(" ")[1];
 
   if (!token) {
@@ -24,13 +29,16 @@ export const authenticateUser = async (req: AuthenticatedRequest, res: Response,
   }
 
   try {
-    const verified = jwt.verify(token, process.env.JWT_SECRET as string) as jwt.JwtPayload;
+    const verified = jwt.verify(
+      token,
+      process.env.JWT_SECRET as string
+    ) as jwt.JwtPayload;
     const user_id = verified.sub as string;
 
     const { data: user, error } = await supabase
-      .from("users")
+      .from(TABLES.USERS)
       .select("id, firstName, birthday, lastName")
-      .eq("id", user_id)
+      .eq(COLUMNS.ID, user_id)
       .single();
 
     if (error || !user) {
