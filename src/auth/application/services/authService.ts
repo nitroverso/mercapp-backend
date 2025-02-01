@@ -44,7 +44,6 @@ export const login = async (email: string, password: string) => {
     .single();
 
   if (UserError) throw new Error(UserError.message);
-  console.log(UserData);
   return {
     message: "Inicio de sesión exitoso",
     user: UserData,

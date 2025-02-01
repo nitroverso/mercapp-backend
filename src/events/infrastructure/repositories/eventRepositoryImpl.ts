@@ -51,13 +51,6 @@ export class EventRepository implements IEventRepository {
       ])
       .select()
       .single();
-    console.log({
-      user_id: userId,
-      name,
-      date,
-      completed: false,
-      precio_total: 0,
-    });
     if (eventError) {
       throw new Error(`Error al crear el evento: ${eventError.message}`);
     }
