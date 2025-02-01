@@ -1,10 +1,11 @@
 import { categoryRepositoryImpl } from "../../infrastructure/repositories/categoryRepositoryImpl";
 import { Category } from "../../domain/entities/category";
 import { v4 as uuidv4 } from "uuid";
+import { CategoryListResponse, CategoryResponse } from "../../../types";
 
 const categoryRepository = new categoryRepositoryImpl();
 
-export const listCategory = async (userId: string): Promise<Category[]> => {
+export const listCategory = async (userId: string): CategoryListResponse => {
   return await categoryRepository.findAll(userId);
 };
 
@@ -18,7 +19,7 @@ export const getCategoryById = async (
 export const createCategory = async (
   userId: string,
   name: string
-): Promise<Category[]> => {
+): CategoryResponse => {
   const id = uuidv4();
   const category = new Category(id, name, userId);
   return await categoryRepository.save(category);
@@ -28,13 +29,13 @@ export const updateCategory = async (
   id: string,
   userId: string,
   category: Partial<Category>
-): Promise<void> => {
-  await categoryRepository.update(id, userId, category);
+): CategoryResponse => {
+  return await categoryRepository.update(id, userId, category);
 };
 
 export const deleteCategory = async (
   id: string,
   userId: string
-): Promise<void> => {
-  await categoryRepository.delete(id, userId);
+): CategoryResponse => {
+  return await categoryRepository.delete(id, userId);
 };
