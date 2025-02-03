@@ -19,9 +19,9 @@ const options = {
       ],
     },
   },
-  apis: ["./swagger/*.yml"],
+  apis: ["./src/**/*.routes.ts"],
 };
 
-const especs = swaggerJSDoc(options);
+const specs = swaggerJSDoc(options);
 
-export default especs;
+export default specs;

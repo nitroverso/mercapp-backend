@@ -1,4 +1,4 @@
-import { Response } from "express";
+import { Request, Response } from "express";
 import { AuthenticatedRequest, STATUS_CODES } from "./types";
 
 type ParseResponseParams = {
@@ -29,7 +29,7 @@ export const parseResponse = ({ data, code, message }: ParseResponseParams) => {
 };
 
 type BuildControllerParams = {
-  req: AuthenticatedRequest;
+  req: AuthenticatedRequest | Request;
   res: Response;
   callback: () => Promise<void>;
 };
