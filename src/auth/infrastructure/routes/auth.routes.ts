@@ -401,7 +401,7 @@ router.post(ROUTES_LOGIN.LOGOUT, logoutUser);
 
 /**
  * @swagger
- * /auth/delete:
+ * /auth/delete/{id}:
  *   delete:
  *     summary: Deleted an user
  *     tags: [Auth]
