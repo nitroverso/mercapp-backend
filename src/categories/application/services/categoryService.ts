@@ -1,7 +1,11 @@
 import { categoryRepositoryImpl } from "../../infrastructure/repositories/categoryRepositoryImpl";
 import { Category } from "../../domain/entities/category";
-import { v4 as uuidv4 } from "uuid";
-import { CategoryListResponse, CategoryResponse } from "../../../types";
+import {
+  CategoryListResponse,
+  CategoryPartialResponse,
+  CategoryResponse,
+  CategoryResponseOrNull,
+} from "../../../types";
 
 const categoryRepository = new categoryRepositoryImpl();
 
@@ -12,7 +16,7 @@ export const listCategory = async (userId: string): CategoryListResponse => {
 export const getCategoryById = async (
   id: string,
   userId: string
-): Promise<Category | null> => {
+): CategoryResponseOrNull => {
   return await categoryRepository.findById(id, userId);
 };
 
@@ -20,15 +24,14 @@ export const createCategory = async (
   userId: string,
   name: string
 ): CategoryResponse => {
-  const id = uuidv4();
-  const category = new Category(id, name, userId);
+  const category = new Category(name, userId);
   return await categoryRepository.save(category);
 };
 
 export const updateCategory = async (
   id: string,
   userId: string,
-  category: Partial<Category>
+  category: CategoryPartialResponse
 ): CategoryResponse => {
   return await categoryRepository.update(id, userId, category);
 };

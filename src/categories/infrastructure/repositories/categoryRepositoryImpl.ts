@@ -2,7 +2,12 @@ import { ICategoryRepository } from "../../domain/interfaces/ICategoryRepository
 import { Category } from "../../domain/entities/category";
 import supabase from "../../../config/supabase";
 import { COLUMNS, TABLES } from "../../../constants/mpConstanst";
-import { CategoryListResponse, CategoryResponse } from "../../../types";
+import {
+  CategoryListResponse,
+  CategoryPartialResponse,
+  CategoryResponse,
+  CategoryResponseOrNull,
+} from "../../../types";
 
 export class categoryRepositoryImpl implements ICategoryRepository {
   async findAll(userId: string): CategoryListResponse {
@@ -15,7 +20,7 @@ export class categoryRepositoryImpl implements ICategoryRepository {
     return data as Category[];
   }
 
-  async findById(id: string, userId: string): Promise<Category | null> {
+  async findById(id: string, userId: string): CategoryResponseOrNull {
     const { data, error } = await supabase
       .from(TABLES.CATEGORIES)
       .select("*")
@@ -31,18 +36,18 @@ export class categoryRepositoryImpl implements ICategoryRepository {
     const { data, error } = await supabase
       .from(TABLES.CATEGORIES)
       .insert(category)
-      .select("*")
-      .limit(1)
+      .select()
       .single();
 
     if (error) throw new Error(error.message);
+
     return data as Category;
   }
 
   async update(
     id: string,
     userId: string,
-    category: Partial<Category>
+    category: CategoryPartialResponse
   ): CategoryResponse {
     const { data, error } = await supabase
       .from(TABLES.CATEGORIES)
@@ -66,7 +71,6 @@ export class categoryRepositoryImpl implements ICategoryRepository {
       .single();
 
     if (error) throw new Error(error.message);
-
     return data as Category;
   }
 }
