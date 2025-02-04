@@ -1,92 +1,84 @@
-import { Request, Response } from "express";
-import { listProducts, getProductById, createProduct, updateProduct, deleteProduct } from "../../application/services/productService";
-
-interface AuthenticatedRequest extends Request {
-  user?: {
-    id: string;
-  };
-}
+import { Response } from "express";
+import {
+  listProducts,
+  getProductById,
+  createProduct,
+  updateProduct,
+  deleteProduct,
+} from "../../application/services/productService";
+import { buildController, parseResponse } from "../../../utils";
+import { AuthenticatedRequest, STATUS_CODES } from "../../../types";
 
 export const getProducts = async (req: AuthenticatedRequest, res: Response) => {
-  try {
-    const userId = req.user!.id; 
-    const products = await listProducts(userId);
-    res.json(products);
-  } catch (error) {
-    if (error instanceof Error) {
-      res.status(500).json({ error: error.message });
-    } else {
-      res.status(500).json({ error: "A ocurrido un problema" });
+  const callback = async () => {
+    const userId = req.user!.id;
+    const data = await listProducts(userId);
+    if (data) {
+      res.json(parseResponse({ code: STATUS_CODES.s200, data }));
     }
-  }
+  };
+  buildController({ req, res, callback });
 };
 
 export const getProduct = async (req: AuthenticatedRequest, res: Response) => {
-  try {
+  const callback = async () => {
     const { id } = req.params;
-    const userId = req.user!.id; 
-    const product = await getProductById(id, userId);
-    if (product) {
-      res.json(product);
-    } else {
-      res.status(404).json({ error: "No se encontro el producto" });
+    const userId = req.user!.id;
+    const data = await getProductById(id, userId);
+    if (data) {
+      res.json(parseResponse({ code: STATUS_CODES.s200, data }));
     }
-  } catch (error) {
-    if (error instanceof Error) {
-      res.status(500).json({ error: error.message });
-    } else {
-      res.status(500).json({ error: "A ocurrido un problema" });
-    }
-  }
+    buildController({ req, res, callback });
+  };
 };
 
 export const addProduct = async (req: AuthenticatedRequest, res: Response) => {
-  try {
+  const callback = async () => {
     const { name, category_id, unit_id, quantity } = req.body;
-
     const userId = req.user!.id;
-
-    await createProduct(userId, name, category_id, unit_id, quantity);
-
-    res.status(201).json({ message: "Producto creado satisfactoriamente" });
-  } catch (error) {
-    if (error instanceof Error) {
-      res.status(500).json({ error: error.message });
-    } else {
-      res.status(500).json({ error: "Ha ocurrido un problema" });
+    const data = await createProduct(
+      userId,
+      name,
+      category_id,
+      unit_id,
+      quantity
+    );
+    if (data) {
+      res
+        .status(STATUS_CODES.s201)
+        .json(parseResponse({ code: STATUS_CODES.s201, data }));
     }
-  }
+  };
+  buildController({ req, res, callback });
 };
 
-
-export const updateProductController = async (req: AuthenticatedRequest, res: Response) => {
-  try {
+export const updateProductController = async (
+  req: AuthenticatedRequest,
+  res: Response
+) => {
+  const callback = async () => {
     const { id } = req.params;
-    const userId = req.user!.id; 
+    const userId = req.user!.id;
     const productData = req.body;
-    await updateProduct(id, userId, productData);
-    res.json({ message: "Producto actualizado satisfactoriamente" });
-  } catch (error) {
-    if (error instanceof Error) {
-      res.status(500).json({ error: error.message });
-    } else {
-      res.status(500).json({ error: "A ocurrido un problema" });
+    const data = await updateProduct(id, userId, productData);
+    if (data) {
+      res.json(parseResponse({ code: STATUS_CODES.s200, data }));
     }
-  }
+    buildController({ req, res, callback });
+  };
 };
 
-export const deleteProductController = async (req: AuthenticatedRequest, res: Response) => {
-  try {
+export const deleteProductController = async (
+  req: AuthenticatedRequest,
+  res: Response
+) => {
+  const callback = async () => {
     const { id } = req.params;
-    const userId = req.user!.id; 
-    await deleteProduct(id, userId);
-    res.status(204).send();
-    res.json({ message: "Producto eliminado satisfactoriamente" });
-  } catch (error) {
-    if (error instanceof Error) {
-      res.status(500).json({ error: error.message });
-    } else {
-      res.status(500).json({ error: "A ocurrido un problema" });
+    const userId = req.user!.id;
+    const data = await deleteProduct(id, userId);
+    if (data) {
+      res.json(parseResponse({ code: STATUS_CODES.s204 }));
     }
-  }
+    buildController({ req, res, callback });
+  };
 };
