@@ -5,24 +5,24 @@ import { ROUTES_UNIT } from "../../../constants/mpConstanst";
 
 const router = Router();
 
-router.use(authenticateUser); // Apply the auth middleware to all routes
+router.use(authenticateUser);
 
 /**
  * @swagger
  * tags:
- *   - name: Category
+ *   - name: Units
  *     description: Category management
  */
 
 /**
  * @swagger
- * /categories:
+ * /units:
  *   get:
- *     summary: Get all categories
- *     tags: [Category]
+ *     summary: Get all units
+ *     tags: [Unit]
  *     responses:
  *       200:
- *         description: Categories retrieved successfully
+ *         description: Unites successfully
  *         content:
  *           application/json:
  *             schema:
@@ -36,11 +36,11 @@ router.use(authenticateUser); // Apply the auth middleware to all routes
  *                       id:
  *                         type: string
  *                         example: "123e4567-e89b-12d53-a44456-42688614174000"
- *                         description: Category ID
+ *                         description: Unit ID
  *                       name:
  *                         type: string
- *                         example: "Carnes"
- *                         description: Category name
+ *                         example: "kg"
+ *                         description: Unit name
  *                       message:
  *                         type: string
  *                         example: "Success!"
