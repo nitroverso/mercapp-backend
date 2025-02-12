@@ -257,15 +257,15 @@ router.get("/:id", getEvent);
  *                 type: string
  *                 example: "Mercado de Juan"
  *                 description: Event name
- *               products:
+ *               productIds:
  *                 type: array
- *                 items:
- *                   type: object
+ *                  items:
+ *                   type: string
  *                   properties:
- *                     id:
- *                       type: number
- *                       example: 202020202
- *                       description: Product ID
+ *                    id:
+ *                     type: string
+ *                      example: 202020202
+ *                      description: Product ID
  *     responses:
  *       200:
  *         description: Event created successfully
