@@ -6,8 +6,8 @@ import {
   updateProduct,
   deleteProduct,
 } from "../../application/services/productService";
-import { buildController, parseResponse } from "../../../utils";
 import { AuthenticatedRequest, STATUS_CODES } from "../../../types";
+import { buildController, parseResponse } from "../../../utils";
 
 export const getProducts = async (req: AuthenticatedRequest, res: Response) => {
   const callback = async () => {
@@ -28,8 +28,8 @@ export const getProduct = async (req: AuthenticatedRequest, res: Response) => {
     if (data) {
       res.json(parseResponse({ code: STATUS_CODES.s200, data }));
     }
-    buildController({ req, res, callback });
   };
+  buildController({ req, res, callback });
 };
 
 export const addProduct = async (req: AuthenticatedRequest, res: Response) => {
@@ -44,9 +44,7 @@ export const addProduct = async (req: AuthenticatedRequest, res: Response) => {
       quantity
     );
     if (data) {
-      res
-        .status(STATUS_CODES.s201)
-        .json(parseResponse({ code: STATUS_CODES.s201, data }));
+      res.json(parseResponse({ code: STATUS_CODES.s201, data }));
     }
   };
   buildController({ req, res, callback });
@@ -58,14 +56,16 @@ export const updateProductController = async (
 ) => {
   const callback = async () => {
     const { id } = req.params;
-    const userId = req.user!.id;
     const productData = req.body;
+    const userId = req.user!.id;
     const data = await updateProduct(id, userId, productData);
     if (data) {
-      res.json(parseResponse({ code: STATUS_CODES.s200, data }));
+      res
+        .status(STATUS_CODES.s200)
+        .json(parseResponse({ code: STATUS_CODES.s200, data }));
     }
-    buildController({ req, res, callback });
   };
+  buildController({ req, res, callback });
 };
 
 export const deleteProductController = async (
@@ -77,8 +77,8 @@ export const deleteProductController = async (
     const userId = req.user!.id;
     const data = await deleteProduct(id, userId);
     if (data) {
-      res.json(parseResponse({ code: STATUS_CODES.s204 }));
+      res.status(STATUS_CODES.s204).send();
     }
-    buildController({ req, res, callback });
   };
+  buildController({ req, res, callback });
 };

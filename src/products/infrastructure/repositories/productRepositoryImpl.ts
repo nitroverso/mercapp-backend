@@ -54,6 +54,7 @@ export class ProductRepositoryImpl implements IProductRepository {
       .update(product)
       .eq(COLUMNS.ID, id)
       .eq(COLUMNS.USER_ID, userId)
+      .select("*")
       .single();
 
     if (error) throw new Error(error.message);
@@ -67,6 +68,7 @@ export class ProductRepositoryImpl implements IProductRepository {
       .delete()
       .eq(COLUMNS.ID, id)
       .eq(COLUMNS.USER_ID, userId)
+      .select("*")
       .single();
 
     if (error) throw new Error(error.message);
