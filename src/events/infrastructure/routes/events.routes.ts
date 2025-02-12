@@ -62,15 +62,15 @@ router.use(authenticateUser); // Apply the auth middleware to all routes
  *                         type: string
  *                         example: "Mercado de Juan"
  *                         description: Event name
- *                       products:
- *                         type: array
- *                         items:
- *                           type: object
- *                           properties:
- *                             id:
- *                               type: number
- *                               example: 202020202
- *                               description: Product ID
+ *                       productIds:
+ *                       type: array
+ *                       items:
+ *                         type: string
+ *                         properties:
+ *                           id:
+ *                             type: string
+ *                             example: 202020202
+ *                             description: Product ID
  *                 message:
  *                   type: string
  *                   example: "Events retrieved successfully"
@@ -165,13 +165,13 @@ router.get("/", getEvents);
  *                       type: string
  *                       example: "Mercado de Juan"
  *                       description: Event name
- *                     products:
+ *                     productIds:
  *                       type: array
  *                       items:
- *                         type: object
+ *                         type: string
  *                         properties:
  *                           id:
- *                             type: number
+ *                             type: string
  *                             example: 202020202
  *                             description: Product ID
  *                 message:
@@ -301,13 +301,13 @@ router.get("/:id", getEvent);
  *                       type: string
  *                       example: "Mercado de Juan"
  *                       description: Event name
- *                     products:
+ *                     productIds:
  *                       type: array
  *                       items:
- *                         type: object
+ *                         type: string
  *                         properties:
  *                           id:
- *                             type: number
+ *                             type: string
  *                             example: 202020202
  *                             description: Product ID
  *                 message:
@@ -380,27 +380,10 @@ router.post("/", addEventWithProducts);
  *                 type: string
  *                 example: "2025-01-30"
  *                 description: Event date
- *               completed:
- *                 type: boolean
- *                 example: false
- *                 description: Event completion status
- *               precio_total:
- *                 type: number
- *                 example: 0
- *                 description: Total price
  *               name:
  *                 type: string
  *                 example: "Mercado de Juan"
  *                 description: Event name
- *               products:
- *                 type: array
- *                 items:
- *                   type: object
- *                   properties:
- *                     id:
- *                       type: number
- *                       example: 202020202
- *                       description: Product ID
  *     responses:
  *       200:
  *         description: Event updated successfully
@@ -436,13 +419,13 @@ router.post("/", addEventWithProducts);
  *                       type: string
  *                       example: "Mercado de Juan"
  *                       description: Event name
- *                     products:
+ *                     productIds:
  *                       type: array
  *                       items:
- *                         type: object
+ *                         type: string
  *                         properties:
  *                           id:
- *                             type: number
+ *                             type: string
  *                             example: 202020202
  *                             description: Product ID
  *                 message:
