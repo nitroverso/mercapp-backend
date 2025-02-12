@@ -45,7 +45,6 @@ export const login = async (email: string, password: string) => {
 
   if (UserError) throw new Error(UserError.message);
   return {
-    message: "Inicio de sesión exitoso",
     user: UserData,
     session: data.user,
     jwt: data.session.access_token,
@@ -56,14 +55,10 @@ export const logout = async () => {
   const { error } = await supabase.auth.signOut();
 
   if (error) throw new Error(error.message);
-
-  return { message: "Sesión cerrada exitosamente" };
 };
 
 export const deleteUser = async (userId: string) => {
   const { error } = await supabase.auth.admin.deleteUser(userId);
 
   if (error) throw new Error(error.message);
-
-  return { message: "Usuario eliminado exitosamente" };
 };

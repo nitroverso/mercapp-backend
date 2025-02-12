@@ -5,79 +5,56 @@ import {
   logout,
   deleteUser,
 } from "../../application/services/authService";
+import { PromiseVoid, STATUS_CODES } from "../../../types";
+import { buildController, parseResponse } from "../../../utils";
 
 export const registerUser = async (
   req: Request,
   res: Response
-): Promise<void> => {
-  try {
+): PromiseVoid => {
+  const callback = async () => {
     const { email, password, firstName, lastName, birthday } = req.body;
-
     if (!email || !password || !firstName || !lastName || !birthday) {
-      res.status(400).json({ error: "Todos los campos son requeridos" });
+      res
+        .status(STATUS_CODES.s400)
+        .json(parseResponse({ code: STATUS_CODES.s400 }));
       return;
     }
-
-    const result = await register(
-      email,
-      password,
-      firstName,
-      lastName,
-      birthday
-    );
-    res.json(result);
-  } catch (error) {
-    if (error instanceof Error) {
-      res.status(400).json({ error: error.message });
-    } else {
-      res.status(400).json({ error: "A ocurrido un error" });
+    const data = await register(email, password, firstName, lastName, birthday);
+    if (data) {
+      res.json(parseResponse({ code: STATUS_CODES.s200, data }));
     }
-  }
+  };
+  buildController({ req, res, callback });
 };
 
-export const loginUser = async (req: Request, res: Response): Promise<void> => {
-  try {
+export const loginUser = async (req: Request, res: Response): PromiseVoid => {
+  const callback = async () => {
     const { email, password } = req.body;
-    const result = await login(email, password);
-    res.json(result);
-  } catch (error) {
-    if (error instanceof Error) {
-      res.status(400).json({ error: error.message });
-    } else {
-      res.status(400).json({ error: "A ocurrido un error" });
+    const data = await login(email, password);
+    if (data) {
+      res.json(parseResponse({ code: STATUS_CODES.s200, data }));
     }
-  }
+  };
+  buildController({ req, res, callback });
 };
 
-export const logoutUser = async (
-  req: Request,
-  res: Response
-): Promise<void> => {
-  try {
-    const result = await logout();
-    res.json(result);
-  } catch (error) {
-    if (error instanceof Error) {
-      res.status(500).json({ error: error.message });
-    } else {
-      res.status(500).json({ error: "A ocurrido un error" });
-    }
-  }
+export const logoutUser = async (req: Request, res: Response): PromiseVoid => {
+  const callback = async () => {
+    const data = await logout();
+    res.json(parseResponse({ code: STATUS_CODES.s200, data }));
+  };
+  buildController({ req, res, callback });
 };
 
 export const deleteUserController = async (
   req: Request,
   res: Response
-): Promise<void> => {
-  try {
+): PromiseVoid => {
+  const callback = async () => {
     const { userId } = req.params;
-    const result = await deleteUser(userId);
-    res.json(result);
-  } catch (error) {
-    if (error instanceof Error) {
-      res.status(400).json({ error: error.message });
-    } else {
-      res.status(400).json({ error: "A ocurrido un error" });
-    }
-  }
+    await deleteUser(userId);
+    res.json(parseResponse({ code: STATUS_CODES.s200 }));
+  };
+  buildController({ req, res, callback });
 };
