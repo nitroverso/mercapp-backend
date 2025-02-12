@@ -1,20 +1,26 @@
 import { IEventRepository } from "../../domain/interfaces/IEventRepository";
-import { Event } from "../../domain/entities/event";
 import supabase from "../../../config/supabase";
 import { COLUMNS, TABLES } from "../../../constants/mpConstanst";
+import {
+  EventListResponse,
+  EventPartialResponse,
+  EventResponseOrNull,
+  EventResponse,
+} from "../../../types";
+import { DomainEvent } from "../../domain/entities/domainEvent";
 
 export class EventRepository implements IEventRepository {
-  async findAll(userId: string): Promise<Event[]> {
+  async findAll(userId: string): EventListResponse {
     const { data, error } = await supabase
       .from(TABLES.EVENTS)
       .select("*")
       .eq(COLUMNS.USER_ID, userId);
 
     if (error) throw new Error(error.message);
-    return data as Event[];
+    return data as DomainEvent[];
   }
 
-  async findById(id: string, userId: string): Promise<Event | null> {
+  async findById(id: string, userId: string): EventResponseOrNull {
     const { data, error } = await supabase
       .from(TABLES.EVENTS)
       .select("*")
@@ -23,21 +29,31 @@ export class EventRepository implements IEventRepository {
       .single();
 
     if (error) return null;
-    return data as Event;
+    return data as DomainEvent;
   }
 
-  async save(event: Event): Promise<void> {
-    const { error } = await supabase.from(TABLES.EVENTS).insert([event]);
-
-    if (error) throw new Error(error.message);
-  }
-
-  async createEventWithShoppyList(
+  async save(
     userId: string,
     name: string,
     date: string,
     productIds: string[]
-  ): Promise<void> {
+  ): EventResponse {
+    const { data: validProducts, error: productError } = await supabase
+      .from(TABLES.PRODUCTS)
+      .select("id")
+      .in(COLUMNS.ID, productIds);
+
+    if (productError) {
+      throw new Error(`Error al validar productos: ${productError.message}`);
+    }
+    console.log({ data: validProducts });
+    const validProductIds = validProducts.map((p) => p.id);
+    console.log({ validProductIds });
+
+    if (validProductIds.length !== productIds.length) {
+      throw new Error("Uno o más productos no existen en la base de datos.");
+    }
+
     const { data: eventData, error: eventError } = await supabase
       .from(TABLES.EVENTS)
       .insert([
@@ -56,21 +72,6 @@ export class EventRepository implements IEventRepository {
     }
     const eventId = eventData.id;
 
-    const { data: validProducts, error: productError } = await supabase
-      .from(TABLES.PRODUCTS)
-      .select("id")
-      .in(COLUMNS.ID, productIds);
-
-    if (productError) {
-      throw new Error(`Error al validar productos: ${productError.message}`);
-    }
-
-    const validProductIds = validProducts.map((p) => p.id);
-
-    if (validProductIds.length !== productIds.length) {
-      throw new Error("Uno o más productos no existen en la base de datos.");
-    }
-
     const shoppyListEntries = validProductIds.map((productId) => ({
       events_id: eventId,
       products_id: productId,
@@ -85,29 +86,38 @@ export class EventRepository implements IEventRepository {
         `Error al crear la lista de compras: ${insertError.message}`
       );
     }
+    return eventData;
   }
 
   async update(
     id: string,
     userId: string,
-    event: Partial<Event>
-  ): Promise<void> {
-    const { error } = await supabase
+    event: EventPartialResponse
+  ): EventResponse {
+    const { data, error } = await supabase
       .from(TABLES.EVENTS)
       .update(event)
       .eq(COLUMNS.ID, id)
-      .eq(COLUMNS.USER_ID, userId);
+      .eq(COLUMNS.USER_ID, userId)
+      .select()
+      .single();
 
     if (error) throw new Error(error.message);
+
+    return data as DomainEvent;
   }
 
-  async delete(id: string, userId: string): Promise<void> {
-    const { error } = await supabase
+  async delete(id: string, userId: string): EventResponse {
+    const { data, error } = await supabase
       .from(TABLES.EVENTS)
       .delete()
       .eq(COLUMNS.ID, id)
-      .eq(COLUMNS.USER_ID, userId);
+      .eq(COLUMNS.USER_ID, userId)
+      .select()
+      .single();
 
     if (error) throw new Error(error.message);
+
+    return data as DomainEvent;
   }
 }

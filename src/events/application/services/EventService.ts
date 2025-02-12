@@ -1,44 +1,44 @@
-import { Event } from "../../domain/entities/event";
+import {
+  EventListResponse,
+  EventPartialResponse,
+  EventResponse,
+  EventResponseOrNull,
+} from "../../../types";
 import { EventRepository } from "../../infrastructure/repositories/eventRepositoryImpl";
 
 const eventRepository = new EventRepository();
 
-export const listEvents = async (userId: string): Promise<Event[]> => {
+export const listEvents = async (userId: string): EventListResponse => {
   return await eventRepository.findAll(userId);
 };
 
 export const getEventById = async (
   id: string,
   userId: string
-): Promise<Event | null> => {
+): EventResponseOrNull => {
   return await eventRepository.findById(id, userId);
 };
 
-export const createEventWithProducts = async (
+export const saveEvent = async (
   userId: string,
   date: string,
   name: string,
   productIds: string[]
-): Promise<void> => {
-  await eventRepository.createEventWithShoppyList(
-    userId,
-    date,
-    name,
-    productIds
-  );
+): EventResponse => {
+  return await eventRepository.save(userId, date, name, productIds);
 };
 
 export const updateEvent = async (
   id: string,
   userId: string,
-  event: Partial<Event>
-): Promise<void> => {
-  await eventRepository.update(id, userId, event);
+  event: EventPartialResponse
+): EventResponse => {
+  return await eventRepository.update(id, userId, event);
 };
 
 export const deleteEvent = async (
   id: string,
   userId: string
-): Promise<void> => {
-  await eventRepository.delete(id, userId);
+): EventResponse => {
+  return await eventRepository.delete(id, userId);
 };

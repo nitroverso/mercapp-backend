@@ -1,9 +1,23 @@
-import { Event } from "../entities/event";
+import {
+  EventListResponse,
+  EventPartialResponse,
+  EventResponse,
+  EventResponseOrNull,
+} from "../../../types";
 
 export interface IEventRepository {
-  findAll(userId: string): Promise<Event[]>;
-  findById(id: string, userId: string): Promise<Event | null>;
-  save(event: Event): Promise<void>;
-  update(id: string, userId: string, event: Partial<Event>): Promise<void>;
-  delete(id: string, userId: string): Promise<void>;
+  findAll(userId: string): EventListResponse;
+  findById(id: string, userId: string): EventResponseOrNull;
+  save(
+    userId: string,
+    date: string,
+    name: string,
+    productIds: string[]
+  ): EventResponse;
+  update(
+    id: string,
+    userId: string,
+    event: EventPartialResponse
+  ): EventResponse;
+  delete(id: string, userId: string): EventResponse;
 }
