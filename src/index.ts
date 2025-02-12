@@ -2,6 +2,7 @@ import authRoutes from "./auth/infrastructure/routes/auth.routes";
 import productRoutes from "./products/infrastructure/routes/products.routes";
 import categoryRoutes from "./categories/infrastructure/routes/categories.routes";
 import eventsRoutes from "./events/infrastructure/routes/events.routes";
+import unitRoutes from "./units/infrastructure/routes/unites.routes";
 import specs from "./swagger/swagger";
 
 const swaggerUi = require("swagger-ui-express");
@@ -19,6 +20,7 @@ app.use("/auth", authRoutes);
 app.use("/products", productRoutes);
 app.use("/categories", categoryRoutes);
 app.use("/events", eventsRoutes);
+app.use("/units", unitRoutes);
 
 const PORT = process.env.PORT || 5000;
 app.listen(PORT, () => {

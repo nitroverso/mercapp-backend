@@ -3,6 +3,7 @@ import { Category } from "./categories/domain/entities/category";
 import { Product } from "./products/domain/entities/product";
 import { DomainEvent } from "./events/domain/entities/domainEvent";
 import { User } from "./auth/domain/entities/user";
+import { Unit } from "./units/domain/entities/unit";
 
 export enum STATUS_CODES {
   s200 = 200,
@@ -53,3 +54,7 @@ export type EventResponseOrNull = Promise<DomainEvent | null>;
 export type UserResponse = Promise<User>;
 export type UserResponseOrNull = Promise<User | null>;
 /** ******* END OF: USER CONTEXT ******* */
+
+/** ******* UNIT CONTEXT ******* */
+export type UnitListResponse = Promise<Unit[] | null>;
+/** ******* END OF: UNIT CONTEXT ******* */

@@ -6,6 +6,7 @@ export const TABLES = {
   PRODUCTS: "products",
   CATEGORIES: "categories",
   SHOPPY_LIST: "shoppy_list",
+  UNITS: "units",
 };
 
 export const COLUMNS = {
@@ -36,4 +37,8 @@ export const ROUTES_CATEGORIES = {
   POST_CATEGORY: "/",
   PUT_CATEGORY: "/:id",
   DELETE_CATEGORY: "/:id",
+};
+
+export const ROUTES_UNIT = {
+  GET_UNIT: "/",
 };
