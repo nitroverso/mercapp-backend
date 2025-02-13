@@ -3,7 +3,7 @@
   "version": "1.0.0",
   "main": "index.js",
   "scripts": {
-    "build": "tsc",
+    "build": "npm install tsc",
     "postbuild": "copyfiles -u 1 src/swagger/swagger.yml dist/swagger",
     "start": "node dist/index.js",
     "dev": "ts-node-dev src/index.ts",
