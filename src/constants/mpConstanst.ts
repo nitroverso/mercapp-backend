@@ -1,5 +1,6 @@
 // constants for repositories and services
 
+/** ******* TABLES CONTEXT ******* */
 export const TABLES = {
   EVENTS: "events",
   USERS: "users",
@@ -8,7 +9,9 @@ export const TABLES = {
   SHOPPY_LIST: "shoppy_list",
   UNITS: "units",
 };
+/** ******* END OF: TABLES CONTEXT ******* */
 
+/** ******* COLUMNS CONTEXT ******* */
 export const COLUMNS = {
   ID: "id",
   FIRST_NAME: "firstName",
@@ -23,14 +26,18 @@ export const COLUMNS = {
   PRICE: "price",
   QUANTITY: "quantity",
 };
+/** ******* END OF: COLUMNS CONTEXT ******* */
 
+/** ******* ROUTES_LOGIN CONTEXT ******* */
 export const ROUTES_LOGIN = {
   REGISTER: "/register",
   LOGIN: "/login",
   LOGOUT: "/logout",
   DELETE: "/delete/:userId",
 };
+/** ******* END OF: ROUTES_LOGIN CONTEXT ******* */
 
+/** ******* ROUTES_CATEGORIES CONTEXT ******* */
 export const ROUTES_CATEGORIES = {
   GET_CATEGORY: "/",
   GET_CATEGORY_ID: "/:id",
@@ -38,7 +45,10 @@ export const ROUTES_CATEGORIES = {
   PUT_CATEGORY: "/:id",
   DELETE_CATEGORY: "/:id",
 };
+/** ******* END OF: ROUTES_CATEGORIES CONTEXT ******* */
 
+/** ******* ROUTES_UNIT CONTEXT ******* */
 export const ROUTES_UNIT = {
   GET_UNIT: "/",
 };
+/** ******* END OF: ROUTES_UNIT CONTEXT ******* */
