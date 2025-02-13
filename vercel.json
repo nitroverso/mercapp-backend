@@ -17,5 +17,6 @@
       },
       "dest": "dist/index.js"
     }
-  ]
+  ],
+  "ignoreCommand": "tsc"
 }
