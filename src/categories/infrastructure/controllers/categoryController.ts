@@ -30,10 +30,6 @@ export const getCategory = async (req: AuthenticatedRequest, res: Response) => {
     const data = await getCategoryById(id, userId);
     if (data) {
       res.json(parseResponse({ code: STATUS_CODES.s200, data }));
-    } else {
-      res
-        .status(STATUS_CODES.s404)
-        .json(parseResponse({ code: STATUS_CODES.s404 }));
     }
   };
   buildController({ req, res, callback });
