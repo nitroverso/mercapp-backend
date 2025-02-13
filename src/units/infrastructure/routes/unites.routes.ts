@@ -11,7 +11,7 @@ router.use(authenticateUser);
  * @swagger
  * tags:
  *   - name: Units
- *     description: Category management
+ *     description: Units management
  */
 
 /**
@@ -41,9 +41,9 @@ router.use(authenticateUser);
  *                         type: string
  *                         example: "kg"
  *                         description: Unit name
- *                       message:
- *                         type: string
- *                         example: "Success!"
+ *                 message:
+ *                    type: string
+ *                    example: "Success!"
  *       400:
  *         description: Bad request
  *         content:
