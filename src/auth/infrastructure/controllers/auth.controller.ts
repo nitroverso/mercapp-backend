@@ -6,21 +6,12 @@ import {
   deleteUser,
 } from "../../application/services/authService";
 import { PromiseVoid, STATUS_CODES } from "../../../types";
-import { buildController, parseResponse } from "../../../utils";
+import { buildController, parseResponse } from "../../../utils/utils";
 
-export const registerUser = async (
-  req: Request,
-  res: Response
-): PromiseVoid => {
+export const loginUser = async (req: Request, res: Response): PromiseVoid => {
   const callback = async () => {
-    const { email, password, firstName, lastName, birthday } = req.body;
-    if (!email || !password || !firstName || !lastName || !birthday) {
-      res
-        .status(STATUS_CODES.s400)
-        .json(parseResponse({ code: STATUS_CODES.s400 }));
-      return;
-    }
-    const data = await register(email, password, firstName, lastName, birthday);
+    const { email, password } = req.body;
+    const data = await login(email, password);
     if (data) {
       res.json(parseResponse({ code: STATUS_CODES.s200, data }));
     }
@@ -28,10 +19,22 @@ export const registerUser = async (
   buildController({ req, res, callback });
 };
 
-export const loginUser = async (req: Request, res: Response): PromiseVoid => {
+export const registerUser = async (
+  req: Request,
+  res: Response
+): PromiseVoid => {
   const callback = async () => {
-    const { email, password } = req.body;
-    const data = await login(email, password);
+    const { email, password, firstName, lastName, birthday } = req.body;
+    if (!firstName || !lastName || !birthday) {
+      const error = parseResponse({
+        code: STATUS_CODES.s400,
+        message:
+          "Bad request: firstName, lastName and birthday are required fields",
+      });
+      throw error;
+    }
+    const data = await register(email, password, firstName, lastName, birthday);
+    console.log(data);
     if (data) {
       res.json(parseResponse({ code: STATUS_CODES.s200, data }));
     }
