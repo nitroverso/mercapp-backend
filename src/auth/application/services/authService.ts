@@ -1,5 +1,8 @@
 import supabase from "../../../config/supabase";
-import { COLUMNS, TABLES } from "../../../constants/mpConstanst";
+import { STATUS_CODES } from "../../../types";
+import { userRepositoryImpl } from "../../infrastructure/repositories/userRepositoryImpl";
+
+const userRepository = new userRepositoryImpl();
 
 export const register = async (
   email: string,
@@ -8,57 +11,36 @@ export const register = async (
   lastName: string,
   birthday: string
 ) => {
-  const { data, error } = await supabase.auth.signUp({ email, password });
-
-  if (error) throw new Error(error.message);
-
-  const user_id = data.user?.id;
-  const user = { id: user_id, firstName, lastName, birthday };
-
-  const { error: insertError } = await supabase
-    .from(TABLES.USERS)
-    .insert([user]);
-
-  if (insertError) throw new Error(insertError.message);
-
-  return {
-    message: "Usuario registrado con éxito",
-    data: user,
-    user: data.user,
-  };
+  const authUser = await userRepository.singUp(email, password);
+  if (!authUser.user) {
+    const authError = {
+      status: STATUS_CODES.s404,
+      message:
+        "User not found when creating it (supabase.auth.signUp returns empty auth user)",
+    };
+    throw authError;
+  }
+  const user = await userRepository.save({
+    id: authUser.user.id,
+    firstName,
+    lastName,
+    birthday,
+  });
+  console.log("userServices", user);
+  return user;
 };
 
 export const login = async (email: string, password: string) => {
-  const { data, error } = await supabase.auth.signInWithPassword({
-    email,
-    password,
-  });
-
-  if (error) throw new Error(error.message);
-
-  const user_id = data.user?.id;
-  const { data: UserData, error: UserError } = await supabase
-    .from(TABLES.USERS)
-    .select("*")
-    .eq(COLUMNS.ID, user_id)
-    .single();
-
-  if (UserError) throw new Error(UserError.message);
-  return {
-    user: UserData,
-    session: data.user,
-    jwt: data.session.access_token,
-  };
+  const userData = await userRepository.loginSupabase(email, password);
+  return userData;
 };
 
 export const logout = async () => {
-  const { error } = await supabase.auth.signOut();
-
-  if (error) throw new Error(error.message);
+  const userLogout = await userRepository.logout();
+  return userLogout;
 };
 
 export const deleteUser = async (userId: string) => {
   const { error } = await supabase.auth.admin.deleteUser(userId);
-
-  if (error) throw new Error(error.message);
+  if (error) throw error;
 };
