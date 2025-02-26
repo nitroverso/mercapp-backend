@@ -2,6 +2,7 @@
 
 /** ******* TABLES CONTEXT ******* */
 export const TABLES = {
+  AUTH: "auth.users",
   EVENTS: "events",
   USERS: "users",
   PRODUCTS: "products",
@@ -52,3 +53,13 @@ export const ROUTES_UNIT = {
   GET_UNIT: "/",
 };
 /** ******* END OF: ROUTES_UNIT CONTEXT ******* */
+
+/** ******* LOG LEVEL ******* */
+
+export const LogLevel = {
+  Info: "Info",
+  Warn: "Warn",
+  Error: "Error",
+  NoError: "No Error",
+};
+/** ******* END OF: LOG LEVEL ******* */
