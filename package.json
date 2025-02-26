@@ -5,7 +5,7 @@
   "scripts": {
     "build": "tsc",
     "postbuild": "copyfiles -u 1 src/swagger/swagger.yml dist/swagger",
-    "start": "node dist/index.js",
+    "start": "nodemon dist/index.js",
     "dev": "ts-node-dev src/index.ts",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
