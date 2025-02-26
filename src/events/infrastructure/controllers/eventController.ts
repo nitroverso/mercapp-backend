@@ -7,7 +7,7 @@ import {
   saveEvent,
 } from "../../application/services/EventService";
 import { AuthenticatedRequest, STATUS_CODES } from "../../../types";
-import { buildController, parseResponse } from "../../../utils";
+import { buildController, parseResponse } from "../../../utils/utils";
 
 export const getEvents = async (req: AuthenticatedRequest, res: Response) => {
   const callback = async () => {

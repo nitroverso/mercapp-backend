@@ -6,7 +6,7 @@ import {
   updateCategory,
   deleteCategory,
 } from "../../application/services/categoryService";
-import { buildController, parseResponse } from "../../../utils";
+import { buildController, parseResponse } from "../../../utils/utils";
 import { AuthenticatedRequest, STATUS_CODES } from "../../../types";
 
 export const getCategories = async (

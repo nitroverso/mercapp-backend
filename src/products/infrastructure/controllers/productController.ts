@@ -7,7 +7,7 @@ import {
   deleteProduct,
 } from "../../application/services/productService";
 import { AuthenticatedRequest, STATUS_CODES } from "../../../types";
-import { buildController, parseResponse } from "../../../utils";
+import { buildController, parseResponse } from "../../../utils/utils";
 
 export const getProducts = async (req: AuthenticatedRequest, res: Response) => {
   const callback = async () => {

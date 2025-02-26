@@ -8,7 +8,7 @@ import {
   PromiseVoid,
   STATUS_CODES,
 } from "../../../types";
-import { parseResponse } from "../../../utils";
+import { parseResponse } from "../../../utils/utils";
 
 dotenv.config();
 

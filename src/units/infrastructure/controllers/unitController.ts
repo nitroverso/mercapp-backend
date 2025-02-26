@@ -1,6 +1,6 @@
 import { Response } from "express";
 import { listUnits } from "../../application/services/unitServices";
-import { buildController, parseResponse } from "../../../utils";
+import { buildController, parseResponse } from "../../../utils/utils";
 import { AuthenticatedRequest, STATUS_CODES } from "../../../types";
 
 export const getUnits = async (req: AuthenticatedRequest, res: Response) => {
