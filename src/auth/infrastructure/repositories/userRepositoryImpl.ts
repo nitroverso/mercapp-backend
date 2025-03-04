@@ -3,52 +3,52 @@ import { User } from "../../domain/entities/user";
 import supabase from "../../../config/supabase";
 import { COLUMNS, TABLES } from "../../../constants/mpConstanst";
 import { buildRepository } from "../../../utils/utils";
-import { UserResponse } from "../../../types";
-import { AuthError, User as AuthUser } from "@supabase/supabase-js";
+import {
+  AuthUserResponse,
+  SupabaseUserAuthResponse,
+  SupabaseUserAuthResponseError,
+} from "../../../types";
 
 export class userRepositoryImpl implements IUserRepository {
-  async singUp(
-    email: string,
-    password: string
-  ): Promise<{ user: AuthUser | null }> {
+  async singUp(email: string, password: string): SupabaseUserAuthResponse {
     const supabaseCall = async () => {
       return await supabase.auth.signUp({ email, password });
     };
-    return buildRepository<{ user: AuthUser | null }>({ supabaseCall });
+    return buildRepository<SupabaseUserAuthResponse>({ supabaseCall });
   }
 
   async loginSupabase(
     email: string,
     password: string
-  ): Promise<{ user: AuthUser | null }> {
+  ): SupabaseUserAuthResponse {
     const supabaseCall = async () => {
       return await supabase.auth.signInWithPassword({ email, password });
     };
-    return buildRepository<{ user: AuthUser | null }>({ supabaseCall });
+    return buildRepository<SupabaseUserAuthResponse>({ supabaseCall });
   }
 
-  async logout(): Promise<{ error: AuthError | null }> {
+  async logout(): SupabaseUserAuthResponseError {
     const supabaseCall = async () => {
       return await supabase.auth.signOut();
     };
-    return buildRepository<{ error: AuthError | null }>({ supabaseCall });
+    return buildRepository<SupabaseUserAuthResponseError>({ supabaseCall });
   }
 
-  async delete(): Promise<{ error: AuthError | null }> {
+  async delete(): SupabaseUserAuthResponseError {
     const supabaseCall = async () => {
       return await supabase.auth.signOut();
     };
-    return buildRepository<{ error: AuthError | null }>({ supabaseCall });
+    return buildRepository<SupabaseUserAuthResponseError>({ supabaseCall });
   }
 
-  async save(user: User): UserResponse {
+  async save(user: User): AuthUserResponse {
     const supabaseCall = async () => {
       return await supabase.from(TABLES.USERS).insert([user]).select().single();
     };
     return buildRepository<User>({ supabaseCall });
   }
 
-  async findById(userId: string): UserResponse {
+  async findById(userId: string): AuthUserResponse {
     const supabaseCall = async () => {
       return await supabase
         .from(TABLES.USERS)
