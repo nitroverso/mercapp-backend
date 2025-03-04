@@ -1,14 +1,14 @@
-import { AuthError, AuthUser } from "@supabase/supabase-js";
-import { UserResponse } from "../../../types";
+import {
+  AuthUserResponse,
+  SupabaseUserAuthResponse,
+  SupabaseUserAuthResponseError,
+} from "../../../types";
 import { User } from "../entities/user";
 
 export interface IUserRepository {
-  singUp(email: string, password: string): Promise<{ user: AuthUser | null }>;
-  loginSupabase(
-    email: string,
-    password: string
-  ): Promise<{ user: AuthUser | null }>;
-  logout(): Promise<{ error: AuthError | null }>;
-  save(user: User): UserResponse;
-  findById(userId: string): UserResponse;
+  singUp(email: string, password: string): SupabaseUserAuthResponse;
+  loginSupabase(email: string, password: string): SupabaseUserAuthResponse;
+  logout(): SupabaseUserAuthResponseError;
+  save(user: User): AuthUserResponse;
+  findById(userId: string): AuthUserResponse;
 }
