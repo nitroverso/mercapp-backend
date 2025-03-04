@@ -4,7 +4,7 @@ import { Product } from "./products/domain/entities/product";
 import { DomainEvent } from "./events/domain/entities/domainEvent";
 import { User } from "./auth/domain/entities/user";
 import { Unit } from "./units/domain/entities/unit";
-import { PostgrestError } from "@supabase/supabase-js";
+import { AuthError, AuthUser, PostgrestError } from "@supabase/supabase-js";
 
 export enum STATUS_CODES {
   s200 = 200,
@@ -59,13 +59,20 @@ export type EventResponseOrNull = Promise<DomainEvent | null>;
 /** ******* END OF: EVENT CONTEXT ******* */
 
 /** ******* USER CONTEXT ******* */
-export type UserResponse = Promise<User>;
-export type UserResponseOrNull = Promise<User | null>;
+export type AuthUserResponse = Promise<User>;
+export type AuthUserResponseOrNull = Promise<User | null>;
 /** ******* END OF: USER CONTEXT ******* */
 
 /** ******* UNIT CONTEXT ******* */
 export type UnitListResponse = Promise<Unit[] | null>;
 /** ******* END OF: UNIT CONTEXT ******* */
+
+/** ******* SUPABASE RESPONSE CONTEXT ******* */
+export type SupabaseUserAuthResponse = Promise<{ user: AuthUser | null }>;
+export type SupabaseUserAuthResponseError = Promise<{
+  error: AuthError | null;
+}>;
+/** ******* SUPABASE RESPONSE CONTEXT ******* */
 
 export const SUPABASE_ERROR_MAP: Record<
   string,
