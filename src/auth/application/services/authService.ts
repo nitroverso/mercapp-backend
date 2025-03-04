@@ -26,7 +26,6 @@ export const register = async (
     lastName,
     birthday,
   });
-  console.log("userServices", user);
   return user;
 };
 
