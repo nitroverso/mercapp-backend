@@ -42,7 +42,6 @@ export class EventRepository implements IEventRepository {
       .from(TABLES.PRODUCTS)
       .select("id")
       .in(COLUMNS.ID, productIds);
-    console.log("contribuidor");
     if (productError) {
       throw new Error(`Error al validar productos: ${productError.message}`);
     }
