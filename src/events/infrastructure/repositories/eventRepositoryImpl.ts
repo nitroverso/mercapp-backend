@@ -42,13 +42,13 @@ export class EventRepository implements IEventRepository {
       .from(TABLES.PRODUCTS)
       .select("id")
       .in(COLUMNS.ID, productIds);
-    console.log("contribuidor");
     if (productError) {
       throw new Error(`Error al validar productos: ${productError.message}`);
     }
     console.log({ data: validProducts });
     const validProductIds = validProducts.map((p) => p.id);
     console.log({ validProductIds });
+    console.log(" CONSOLE.LOG DE PRODUCTIDS", productIds);
 
     if (validProductIds.length !== productIds.length) {
       throw new Error("Uno o más productos no existen en la base de datos.");
