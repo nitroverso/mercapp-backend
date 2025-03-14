@@ -8,84 +8,88 @@ import {
   EventResponse,
 } from "../../../types";
 import { DomainEvent } from "../../domain/entities/domainEvent";
+import { buildRepository } from "../../../utils/utils";
 
+const TABLE_NAME = TABLES.EVENTS;
+const TABLE_NAME_PRODUCTS = TABLES.PRODUCTS;
+const TABLE_NAME_SHOPPY_LIST = TABLES.SHOPPY_LIST;
 export class EventRepository implements IEventRepository {
   async findAll(userId: string): EventListResponse {
-    const { data, error } = await supabase
-      .from(TABLES.EVENTS)
-      .select("*")
-      .eq(COLUMNS.USER_ID, userId);
-
-    if (error) throw new Error(error.message);
-    return data as DomainEvent[];
+    const supabaseCall = async () => {
+      return await supabase
+        .from(TABLE_NAME)
+        .select("*")
+        .eq(COLUMNS.USER_ID, userId);
+    };
+    return buildRepository<DomainEvent[]>({ supabaseCall });
   }
 
   async findById(id: string, userId: string): EventResponseOrNull {
-    const { data, error } = await supabase
-      .from(TABLES.EVENTS)
-      .select("*")
-      .eq(COLUMNS.ID, id)
-      .eq(COLUMNS.USER_ID, userId)
-      .single();
-
-    if (error) return null;
-    return data as DomainEvent;
+    const supabaseCall = async () => {
+      return await supabase
+        .from(TABLE_NAME)
+        .select("*")
+        .eq(COLUMNS.ID, id)
+        .eq(COLUMNS.USER_ID, userId)
+        .single();
+    };
+    return buildRepository<DomainEvent | null>({ supabaseCall });
   }
 
   async save(
     userId: string,
-    name: string,
     date: string,
+    name: string,
     productIds: string[]
   ): EventResponse {
-    const { data: validProducts, error: productError } = await supabase
-      .from(TABLES.PRODUCTS)
-      .select("id")
-      .in(COLUMNS.ID, productIds);
-    if (productError) {
-      throw new Error(`Error al validar productos: ${productError.message}`);
+    const supabaseCall = async () => {
+      return await supabase
+        .from(TABLE_NAME_PRODUCTS)
+        .select("id")
+        .in(COLUMNS.ID, productIds);
+    };
+    const validateProducts = await buildRepository<{ id: string }[]>({
+      supabaseCall,
+    });
+
+    console.log({ validateProducts });
+    console.log({ productIds });
+    if (
+      validateProducts.length !== productIds.length ||
+      validateProducts.length <= 0
+    ) {
+      throw new Error(
+        "Uno o más productos no existen en la base de datos o no insertaste productos."
+      );
     }
-    console.log({ data: validProducts });
-    const validProductIds = validProducts.map((p) => p.id);
+    const validProductIds = validateProducts.map((product) => product.id);
     console.log({ validProductIds });
-    console.log(" CONSOLE.LOG DE PRODUCTIDS", productIds);
-
-    if (validProductIds.length !== productIds.length) {
-      throw new Error("Uno o más productos no existen en la base de datos.");
-    }
-
-    const { data: eventData, error: eventError } = await supabase
-      .from(TABLES.EVENTS)
-      .insert([
-        {
-          user_id: userId,
-          name,
-          date,
-          completed: false,
-          precio_total: 0,
-        },
-      ])
-      .select()
-      .single();
-    if (eventError) {
-      throw new Error(`Error al crear el evento: ${eventError.message}`);
-    }
+    const createEvent = async () => {
+      return await supabase
+        .from(TABLE_NAME)
+        .insert({ name, date, user_id: userId })
+        .eq(COLUMNS.USER_ID, userId)
+        .select()
+        .single();
+    };
+    const eventData = await buildRepository<DomainEvent>({
+      supabaseCall: createEvent,
+    });
     const eventId = eventData.id;
-
     const shoppyListEntries = validProductIds.map((productId) => ({
       events_id: eventId,
       products_id: productId,
     }));
 
-    const { error: insertError } = await supabase
-      .from(TABLES.SHOPPY_LIST)
-      .insert(shoppyListEntries);
+    const insertShoppyListEntries = async () => {
+      return await supabase
+        .from(TABLE_NAME_SHOPPY_LIST)
+        .insert(shoppyListEntries);
+    };
 
-    if (insertError) {
-      throw new Error(
-        `Error al crear la lista de compras: ${insertError.message}`
-      );
-    }
+    await buildRepository<DomainEvent>({
+      supabaseCall: insertShoppyListEntries,
+    });
     return eventData;
   }
 
@@ -94,30 +98,28 @@ export class EventRepository implements IEventRepository {
     userId: string,
     event: EventPartialResponse
   ): EventResponse {
-    const { data, error } = await supabase
-      .from(TABLES.EVENTS)
-      .update(event)
-      .eq(COLUMNS.ID, id)
-      .eq(COLUMNS.USER_ID, userId)
-      .select()
-      .single();
-
-    if (error) throw new Error(error.message);
-
-    return data as DomainEvent;
+    const supabaseCall = async () => {
+      return await supabase
+        .from(TABLE_NAME)
+        .update(event)
+        .eq(COLUMNS.ID, id)
+        .eq(COLUMNS.USER_ID, userId)
+        .select()
+        .single();
+    };
+    return buildRepository<DomainEvent>({ supabaseCall });
   }
 
   async delete(id: string, userId: string): EventResponse {
-    const { data, error } = await supabase
-      .from(TABLES.EVENTS)
-      .delete()
-      .eq(COLUMNS.ID, id)
-      .eq(COLUMNS.USER_ID, userId)
-      .select()
-      .single();
-
-    if (error) throw new Error(error.message);
-
-    return data as DomainEvent;
+    const supabaseCall = async () => {
+      return await supabase
+        .from(TABLE_NAME)
+        .delete()
+        .eq(COLUMNS.ID, id)
+        .eq(COLUMNS.USER_ID, userId)
+        .select()
+        .single();
+    };
+    return buildRepository<DomainEvent>({ supabaseCall });
   }
 }
