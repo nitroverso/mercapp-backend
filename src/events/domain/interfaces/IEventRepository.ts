@@ -10,8 +10,8 @@ export interface IEventRepository {
   findById(id: string, userId: string): EventResponseOrNull;
   save(
     userId: string,
-    date: string,
     name: string,
+    date: string,
     productIds: string[]
   ): EventResponse;
   update(
