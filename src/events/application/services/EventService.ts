@@ -25,7 +25,7 @@ export const saveEvent = async (
   name: string,
   productIds: string[]
 ): EventResponse => {
-  return await eventRepository.save(userId, date, name, productIds);
+  return await eventRepository.save(userId, name, date, productIds);
 };
 
 export const updateEvent = async (
