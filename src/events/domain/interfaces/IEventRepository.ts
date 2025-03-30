@@ -4,6 +4,7 @@ import {
   EventResponse,
   EventResponseOrNull,
 } from "../../../types";
+import { DomainEvent } from "../entities/domainEvent";
 
 export interface IEventRepository {
   findAll(userId: string): EventListResponse;
@@ -13,7 +14,10 @@ export interface IEventRepository {
     name: string,
     date: string,
     productIds: string[]
-  ): EventResponse;
+  ): Promise<{
+    event: DomainEvent;
+    products: { id: string; [key: string]: any }[];
+  }>;
   update(
     id: string,
     userId: string,

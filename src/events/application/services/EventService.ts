@@ -4,6 +4,7 @@ import {
   EventResponse,
   EventResponseOrNull,
 } from "../../../types";
+import { DomainEvent } from "../../domain/entities/domainEvent";
 import { EventRepository } from "../../infrastructure/repositories/eventRepositoryImpl";
 
 const eventRepository = new EventRepository();
@@ -24,7 +25,10 @@ export const saveEvent = async (
   date: string,
   name: string,
   productIds: string[]
-): EventResponse => {
+): Promise<{
+  event: DomainEvent;
+  products: { id: string; [key: string]: any }[];
+}> => {
   return await eventRepository.save(userId, name, date, productIds);
 };
 

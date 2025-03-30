@@ -41,19 +41,22 @@ export class EventRepository implements IEventRepository {
     date: string,
     name: string,
     productIds: string[]
-  ): EventResponse {
+  ): Promise<{
+    event: DomainEvent;
+    products: { id: string; [key: string]: any }[];
+  }> {
     const supabaseCall = async () => {
       return await supabase
         .from(TABLE_NAME_PRODUCTS)
-        .select("id")
+        .select("*")
         .in(COLUMNS.ID, productIds);
     };
     const validateProducts = await buildRepository<{ id: string }[]>({
       supabaseCall,
     });
 
-    console.log({ validateProducts });
-    console.log({ productIds });
+    console.log("validateProducts", validateProducts);
+
     if (
       validateProducts.length !== productIds.length ||
       validateProducts.length <= 0
@@ -63,7 +66,6 @@ export class EventRepository implements IEventRepository {
       );
     }
     const validProductIds = validateProducts.map((product) => product.id);
-    console.log({ validProductIds });
     const createEvent = async () => {
       return await supabase
         .from(TABLE_NAME)
@@ -90,7 +92,7 @@ export class EventRepository implements IEventRepository {
     await buildRepository<DomainEvent>({
       supabaseCall: insertShoppyListEntries,
     });
-    return eventData;
+    return { event: eventData, products: validateProducts };
   }
 
   async update(
